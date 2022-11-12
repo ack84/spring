@@ -1,6 +1,7 @@
 package com.ack84.spring.repository;
 
 import com.ack84.spring.domain.Member;
+import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
