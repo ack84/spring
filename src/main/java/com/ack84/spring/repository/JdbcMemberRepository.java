@@ -22,12 +22,18 @@ public class JdbcMemberRepository implements MemberRepository {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
+            //getConnection함수 [세션유지를 하게 해주는 Util]
+            //Connection을 닫을 때 DataSourceUtils.releaseConnection 통해서 닫아야함
             conn = getConnection();
+            //Statement.RETURN_GENERATED_KEYS [id값을 얻기위해서 사용]
             pstmt = conn.prepareStatement(sql,
                     Statement.RETURN_GENERATED_KEYS);
+            // parameterindex 1 은 상단의 sql의 첫번째 ? 를 의미
             pstmt.setString(1, member.getName());
             pstmt.executeUpdate();
+            //getGeneratedKeys [현재 insert한 id값을 반환]
             rs = pstmt.getGeneratedKeys();
+            //rs에 값이 있으면
             if (rs.next()) {
                 member.setId(rs.getLong(1));
             } else {
@@ -37,6 +43,7 @@ public class JdbcMemberRepository implements MemberRepository {
         } catch (Exception e) {
             throw new IllegalStateException(e);
         } finally {
+            //연결 끊기 close 함수로
             close(conn, pstmt, rs);
         }
     }

@@ -24,6 +24,7 @@ public class JdbcTemplateRepository implements MemberRepository{
 
     @Override
     public Member save(Member member) {
+        //SimpleJdbcInsert 에서 테이블과 pk값을 지정해주면 insert query를 자동으로 생성하여 수행해줌
         SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
         simpleJdbcInsert.withTableName("member").usingGeneratedKeyColumns("id");
 
@@ -37,8 +38,14 @@ public class JdbcTemplateRepository implements MemberRepository{
 
     @Override
     public Optional<Member> findById(Long id) {
-        List<Member> result = jdbcTemplate.query("select * from Member where id = ?", memberRowMapper(),id);
+
+        List<Member> result = jdbcTemplate.query("select * from Member where id = ? ", memberRowMapper(), id);
         return result.stream().findAny();
+
+        //조회한 결과값을 RowMapper로 list형태로 전달하고
+        //Optional값인 list에 대해서 .stream().findAny()로 꺼냄
+//        List<Member> result = jdbcTemplate.query("select * from Member where id = ?", memberRowMapper(),id);
+//        return result.stream().findAny();
     }
 
     @Override
@@ -63,6 +70,7 @@ public class JdbcTemplateRepository implements MemberRepository{
 //    }
 
     private RowMapper<Member> memberRowMapper(){
+        //lamda 스타일로 변경 가능
         return new RowMapper<Member>() {
             @Override
             public Member mapRow(ResultSet rs, int rowNum) throws SQLException {

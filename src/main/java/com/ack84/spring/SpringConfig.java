@@ -1,22 +1,34 @@
 package com.ack84.spring;
 
 
-import com.ack84.spring.repository.JdbcTemplateRepository;
+import com.ack84.spring.repository.JpaMemberRepository;
 import com.ack84.spring.repository.MemberRepository;
-import com.ack84.spring.repository.MemoryMemberRepository;
 import com.ack84.spring.service.MemberService;
-import hello.hellospring.repository.JdbcMemberRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import javax.sql.DataSource;
 
 @Configuration
 public class SpringConfig {
 
-    private final DataSource dataSource;
+    //springdata JPA
+    private final MemberRepository memberRepository;
 
-    public SpringConfig(DataSource dataSource) {
+    @Autowired
+    public SpringConfig(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
+    }
+
+    //jpa
+//    private final EntityManager em;
+//
+//    public SpringConfig(EntityManager em) {
+//        this.em = em;
+//    }
+    //jdbcTemplate
+//    private final DataSource dataSource;
+
+//    public SpringConfig(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
@@ -31,6 +43,7 @@ public class SpringConfig {
     public MemberRepository memberRepository(){
 //      return new MemoryMemberRepository();
 //      return new JdbcMemberRepository(dataSource);
-        return new JdbcTemplateRepository(dataSource);
+//      return new JdbcTemplateRepository(dataSource);
+        return new JpaMemberRepository(em);
     }
 }
